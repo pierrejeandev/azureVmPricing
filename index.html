@@ -1,0 +1,627 @@
+<html>
+<head>
+  <title>Azure VM Pricing</title>
+  <meta http-equiv="Access-Control-Allow-Origin" content="*"/>
+
+  <script type="text/javascript" language="javascript">
+// Google analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-33038854-1']);
+_gaq.push(['_setCustomVar',
+        1,                  // This custom var is set to slot #1.  Required parameter.
+        'Acces Type',       // The name acts as a kind of category for the user activity.  Required parameter.
+        'Extranet',         // This value of the custom variable.  Required parameter.
+        2                   // Sets the scope to session-level.  Optional parameter.
+    ]);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="DataTables/jQueryUI-1.12.1/themes/base/jquery-ui.css"/>
+  <link rel="stylesheet" type="text/css" href="DataTables/DataTables-1.10.16/css/dataTables.jqueryui.css"/>
+  <link rel="stylesheet" type="text/css" href="DataTables/Buttons-1.5.1/css/buttons.jqueryui.css"/>
+  <link rel="stylesheet" type="text/css" href="DataTables/FixedColumns-3.2.4/css/fixedColumns.jqueryui.css"/>
+  <link rel="stylesheet" type="text/css" href="DataTables/FixedHeader-3.1.3/css/fixedHeader.jqueryui.css"/>
+  <link rel="stylesheet" type="text/css" href="DataTables/Responsive-2.2.1/css/responsive.jqueryui.css"/>
+  <script type="text/javascript" src="DataTables/jQuery-3.2.1/jquery-3.2.1.js"></script>
+  <script type="text/javascript" src="DataTables/jQueryUI-1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="DataTables/DataTables-1.10.16/js/jquery.dataTables.js"></script>
+  <script type="text/javascript" src="DataTables/DataTables-1.10.16/js/dataTables.jqueryui.js"></script>
+  <script type="text/javascript" src="DataTables/Buttons-1.5.1/js/dataTables.buttons.js"></script>
+  <script type="text/javascript" src="DataTables/Buttons-1.5.1/js/buttons.jqueryui.js"></script>
+  <script type="text/javascript" src="DataTables/Buttons-1.5.1/js/buttons.html5.js"></script>
+  <script type="text/javascript" src="DataTables/FixedColumns-3.2.4/js/dataTables.fixedColumns.js"></script>
+  <script type="text/javascript" src="DataTables/FixedHeader-3.1.3/js/dataTables.fixedHeader.js"></script>
+  <script type="text/javascript" src="DataTables/Responsive-2.2.1/js/dataTables.responsive.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+<body>
+  <script type="text/javascript" language="javascript">
+function sortNumber(a, b) {
+    return a - b;
+}
+
+$(document).ready( function () {
+
+  // Init jquery table
+  var table = $('#table_id').DataTable(
+    {
+      lengthMenu: [20, 50, 100, 200, 500, 1000],
+      pageLength: 1000,
+      defaultContent: "",
+      //dom: '<"top"<"actions">Blfpi<"clear">><"clear">rt<"bottom">',
+      dom: '<"#exports"B><"#pagesize"l><"#pager"p><"#info"i><"#search"f>rt',
+      fixedHeader: true,
+      language:
+      {
+        loadingRecords: '<img src="ajax-loader.gif">',
+        processing: '<img src="ajax-loader.gif">',
+      },
+      buttons: [
+        'copy', 'csv', //'excel', 'pdf', 'print'
+      ],
+      columns:
+      [
+        // { },   
+        // vmid
+        { 
+          render: function ( data, type, row, meta ) 
+            {             
+              if ( type === 'display' )
+              {
+                if(data.length == 2 && data[1] != '')
+                {
+                    var content = '';
+                    for (var key in data[1])
+                      content += key + ': ' + data[1][key] + "<br />";
+                    return '<div class="tooltip">' + data[0] + '<span class="tooltiptext">Other spec:<br />' + content + '</span></div>' ;
+                }
+                else
+                  return data.length == 2 ? data[0] : data;
+              }
+              return data.length == 2 ? data[0] : data;
+            }  
+        }, 
+        { },   // series
+        { },   // Tier
+        { },   // VM Size
+//        { width: "40px", className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },    // Cores
+//        { type: "numeric", visible: false, name: 'coreSort' }, // core hiddent for sorting
+        // Cores
+        { 
+          className: "number", 
+          render: function ( data, type, row, meta ) 
+            {             
+              if ( type === 'display' )
+              {
+                return data.length == 2 
+                  ? (
+                      data[1] != ''
+                        ? '<div class="tooltip">' + data[0] + '<span class="tooltiptext">Processor: ' + data[1] + '</span></div>' 
+                        : data[0]
+                    )
+                  : data
+              }
+              return data.length == 2 ? data[0] : data;
+            }  
+        },                                                                                  // Cores
+//        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 1) },        // Ram
+        { 
+          className: "number", 
+          render: function ( data, type, row, meta ) 
+          { 
+            if ( type === 'display' )
+            {
+              if (data > 1000) 
+              {
+                value = data.toString();
+                return value.substring(0, value.length - 3) + ' ' + value.substring(value.length - 3, value.length);
+              }
+              else
+                return data.toString() 
+            }
+            return data;
+          } },        // Ram
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // Temp Storage
+        { },                                                                                // Temp Storage Type
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // temps Storage Iops
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // tempsStorageMBpsRead / tempsStorageMBpsWrite
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // Data disks
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // Iops
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // MBps
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // cached Iops
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // cached MBps
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // io Cache Size
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // NIC
+        { className: "number", render: $.fn.dataTable.render.number( ' ', '.', 0) },        // NIC Mbps
+        { className: "number P1", render: $.fn.dataTable.render.number( ' ', '.', 0) },     // Price 1
+        { className: "number P2", render: $.fn.dataTable.render.number( ' ', '.', 0) },     // Price 2
+        { render: function ( data, type, full, meta ) { return data.length == 2 ? '<a target="_blank" href="' + data[0] + '">' + data[1] + '</a>' : '';}, },   // link to doc
+//        { width: "120px" },   // processor
+      ],
+    });
+
+
+  function getPrice(data, priceRef, callback)
+  {
+    // data is the json vm data
+    // priceRef is data.p1 or data.p2 depending the prices we are loading.
+    // call back is currently loadData
+
+    // using closure scope https://www.jstips.co/en/javascript/passing-arguments-to-callback-functions/
+    return function(priceData)
+    {
+      // priceData is the data loaded from the $.getJSON call
+
+      priceRef.prices = priceData;
+      priceRef.status = 'ok';
+
+      // if both prices are finished loading -> continue with the callback.
+      if(data.p1.status != 'loading' && data.p2.status != 'loading')
+      {
+        callback(data);
+      }
+    }
+  }
+
+
+  function getPrices(data, callback)
+  {
+    // call back is currently loadData
+
+    p1Region = $('#filterP1Region').val();
+    p2Region = $('#filterP2Region').val();
+    if(!data.p1) { data.p1 = { 'region': '', 'prices': null, 'status': null } ; }
+    if(!data.p2) { data.p2 = { 'region': '', 'prices': null, 'status': null } ; }
+
+    // Get prices
+    if(data.p1.region != p1Region)
+    {
+      if(data.refRegionPricesFiles[p1Region])
+      {
+        data.p1.status = 'loading';
+        data.p1.region = p1Region;
+        $.getJSON(data.refRegionPricesFiles[p1Region], getPrice(data, data.p1, callback) );
+      }
+      else
+      {
+        data.p1.status = 'no data';
+      }
+    }
+
+    if(data.p2.region != p1Region)
+    {
+      if(data.refRegionPricesFiles[p2Region])
+      {
+        data.p2.status = 'loading';
+        data.p2.region = p2Region;
+        $.getJSON(data.refRegionPricesFiles[p2Region], getPrice(data, data.p2, callback) );
+      }
+      else
+      {
+        data.p2.status = 'no data';
+      }
+    }
+  }
+
+  function loadData(data)
+  {
+    // debug
+    console.log('data.p1: ');
+    console.log(data.p1);
+    console.log('data.p2: ');
+    console.log(data.p2);
+
+    table.clear();
+    var rowcount = 0;
+
+    // data update time
+    $('#lastupdate').text(data.updateDateUtc);
+
+    // filters values
+    coreMin = data.refCores[$("#filterCoresSlider").slider("values", 0)];
+    coreMax = data.refCores[$("#filterCoresSlider").slider("values", 1)];
+    ramMin = data.refRam[$("#filterRamSlider").slider("values", 0)];
+    ramMax = data.refRam[$("#filterRamSlider").slider("values", 1)];
+    tier = $("#filterTier").val();
+    serie = $("#filterSerie").val();
+    currency = $('#filterCurrency').val();
+    hours = $('#filterHours').val();
+    currencyrate = data.currencyData[currency].conversion;
+    p1Region = $('#filterP1Region').val();
+    p1Offer = $('#filterP1Offer').val();
+    p2Region = $('#filterP2Region').val();
+    p2Offer = $('#filterP2Offer').val();
+
+
+    console.log('core: [' + $("#filterCoresSlider").slider("values", 0) + ', ' + $("#filterCoresSlider").slider("values", 1) + '], ram: [' + $("#filterRamSlider").slider("values", 0) + ', ' + $("#filterRamSlider").slider("values", 1) + ']');
+    console.log('core: [' + coreMin + ', ' + coreMax + '], ram: [' + ramMin + ', ' + ramMax + ']');
+
+    $.each(data.offers, function(key, vm )
+      {
+        // for each vm
+
+        // Add VM to table
+        //if(rowcount < 20)
+        {
+          selected = coreMin <= vm.cores && vm.cores <= coreMax && ramMin <= vm.ram && vm.ram <= ramMax && (tier == "" || tier == vm.tier); // && (serie == "" || serie == (vm.series ? vm.series : ''))
+          if(serie != "")
+          {
+            if (! vm.series)
+              selected = false;
+            else if(serie == "_!B_")
+              selected = selected && (!vm.series.startsWith('B'));
+            else if(serie == "_B_")
+              selected = selected && vm.series.startsWith('B');
+            else if(serie == "_v2_")
+              selected = selected && vm.series.endsWith('v2');
+            else if(serie == "_v3_")
+              selected = selected && vm.series.endsWith('v3');
+            else if(serie == "_v4_")
+              selected = selected && vm.series.endsWith('v4');
+            else if(serie == "_vx_")
+              selected = selected && vm.series.indexOf('v') == -1;
+            else if(serie == "_a_")
+              selected = selected && vm.series.indexOf('a') != -1;
+            else if(serie == "_!a_")
+              selected = selected && vm.series.indexOf('a') == -1;
+            else if(serie == "_s_")
+              selected = selected && vm.series.indexOf('s') != -1;
+            else if(serie == "_!s_")
+              selected = selected && vm.series.indexOf('s') == -1;
+/*
+            else if(serie == "")
+              selected = selected && ;
+*/
+            else 
+              //selected = selected && serie == (vm.series ? vm.series : '');
+              selected = selected && vm.series.startsWith(serie);
+          }
+          if(selected) 
+          {
+            table.row.add([
+              // key, 
+              [ key, (vm.other ? vm.other : []) ],
+              (vm.series ? vm.series : ''),
+              vm.tier,
+              vm.vmsize,
+//              vm.cores,
+              [ vm.cores, (vm.processor ? vm.processor : '') ],
+              vm.ram,
+              (vm.tempsStorage ? vm.tempsStorage : ''),
+              (vm.tempsStorageType ? vm.tempsStorageType : ''),
+              (vm.tempsStorageIops ? vm.tempsStorageIops : ''),
+              (vm.tempsStorageMBps ? vm.tempsStorageMBps : ((vm.tempsStorageMBpsRead ? vm.tempsStorageMBpsRead : '') + (vm.tempsStorageMBpsRead || vm.tempsStorageMBpsWrite ? ' / ' : '') + (vm.tempsStorageMBpsWrite ? vm.tempsStorageMBpsWrite : ''))),
+              (vm.dataDisks ? vm.dataDisks : ''),
+              (vm.iops ? vm.iops : ('')),
+              (vm.MBps ? vm.MBps : ('')),
+              (vm.cachedIops ? vm.cachedIops : ''),
+              (vm.cachedMBps ? vm.cachedMBps : ''),
+              (vm.ioCache ? vm.ioCache : ''),
+              (vm.nic ? vm.nic : ''),
+              (vm.nicMbps ? vm.nicMbps : ''),
+              // (vm.prices && vm.prices[p1Region] && vm.prices[p1Region][P1Offer] ? vm.prices[p1Region][P1Offer] * currencyrate * hours : ''),
+              // (vm.prices && vm.prices[p2Region] && vm.prices[p2Region][P2Offer] ? vm.prices[p2Region][P2Offer] * currencyrate * hours : ''),
+              (data.p1.prices && data.p1.prices[key] && data.p1.prices[key][p1Offer] ? data.p1.prices[key][p1Offer] * currencyrate * hours : ''),
+              (data.p2.prices && data.p2.prices[key] && data.p2.prices[key][p2Offer] ? data.p2.prices[key][p2Offer] * currencyrate * hours : ''),
+              (vm.source ? [ data.sources.docs[vm.source], vm.source] : [] ),
+//              (vm.processor ? vm.processor : ''),
+              ]);
+            rowcount++;
+          }
+        }
+      });
+
+    table.draw();
+  }
+
+
+  // Load VM data from json
+  var azureVMData = 'data/AzureVMDataWOPrices.js'
+  $.getJSON(azureVMData, function( data )
+    {
+      // VM data loaded
+
+      var coresOptions = data.refCores;
+      var ramOptions = data.refRam;
+
+      // init Cores filter slider
+      filterCoresSlider = $("#filterCoresSlider").slider(
+        {
+          range: true,
+          min: 0,
+          max: coresOptions.length - 1,
+          values: [ 0, coresOptions.length - 1],
+          slide: function( event, ui )
+          {
+            $( "#filterCores" ).val( coresOptions[ui.values[0]] + " - " + coresOptions[ui.values[1]] );
+          },
+          change: function( event, ui )
+          {
+            console.log('filterCores: [' + ui.values[0] + ', ' + ui.values[1] + ']')
+            $( "#filterCores" ).val( coresOptions[ui.values[0]] + " - " + coresOptions[ui.values[1]] );
+            getPrices(data, loadData);
+          }
+        });
+      $( "#filterCores" ).val(coresOptions[$("#filterCoresSlider").slider("values", 0)] + " - " + coresOptions[$("#filterCoresSlider").slider("values", 1)] );
+
+      // init RAM filter slider
+      $("#filterRamSlider").slider(
+        {
+          range: true,
+          min: 0,
+          max: ramOptions.length - 1,
+          values: [ 0, ramOptions.length - 1],
+          slide: function( event, ui )
+          {
+            $( "#filterRam" ).val( ramOptions[ui.values[0]] + " - " + ramOptions[ui.values[1]] );
+          },
+          change: function( event, ui )
+          {
+            $( "#filterRam" ).val( ramOptions[ui.values[0]] + " - " + ramOptions[ui.values[1]] );
+            getPrices(data, loadData);
+          }
+        });
+      $("#filterRam").val(ramOptions[$("#filterRamSlider").slider("values", 0)] + " - " + ramOptions[$("#filterRamSlider").slider("values", 1)] );
+
+      // button 'filter' event
+      $("#applyFilter").click(function() { getPrices(data, loadData); } );
+
+
+      // init currency
+      filterCurrency = $('filterCurrency');
+/*
+Ca marche pas !?§,?§,!
+      filterCurrency.find('option').remove().end(); //clear the list of currency
+      currencies = Object.keys(data.currencyData).sort();
+      for(var i = 0; i < currencies.length; i++)
+      {
+        var key = currencies[i]
+        //filterCurrency.append( $('<option>', { value: key, text: key.name, selected: key == 'eur' }) );
+        filterCurrency.append( $('<option>', { text: key, selected: key == 'eur' }) );
+      }
+*/
+
+      // init filter for prices
+      filterP1Region = $('#filterP1Region');
+      filterP2Region = $('#filterP2Region');
+
+      for(var i = 0; i < data.refDatacenter.length; i++)
+      {
+        var t = data.refDatacenter[i]
+        filterP1Region.append( $('<option>', { text: t, selected: t == 'europe-north' }));
+        filterP2Region.append( $('<option>', { text: t, selected: t == 'europe-west' }));
+      }
+      filterP1Offer = $('#filterP1Offer');
+      filterP2Offer = $('#filterP2Offer');
+      for(var i = 0; i < data.refOffers.length; i++)
+      {
+        var t = data.refOffers[i]
+        filterP1Offer.append($('<option>', { text: t, selected: t == 'windows' }));
+        filterP2Offer.append($('<option>', { text: t, selected: t == 'windows' }));
+      }
+
+      // reload data on filter changes
+      $('#filterTier').on(  'change', function() { loadData(data); })
+      $('#filterSerie').on( 'change', function() { loadData(data); })
+      // $('#filterCurrency').on( 'change', function() { loadData(data); })
+      $('#filterHours').on( 'change', function() { loadData(data); })
+      filterCurrency.on(    'change', function() { loadData(data); })
+      filterP1Region.on('change', function() { getPrices(data, loadData); })
+      filterP2Region.on('change', function() { getPrices(data, loadData); })
+      filterP1Offer.on(     'change', function() { loadData(data); })
+      filterP2Offer.on(     'change', function() { loadData(data); })
+
+      // load table
+      getPrices(data, loadData);
+    });
+  });
+  </script>
+  <div class="filters">
+    <div style="float:right;" ><span>Last data refresh: </span><span id="lastupdate"></span><span> UTC</span></div>
+    <b>Filters:</b>
+    <div style="display:Inline-block; padding: 7px 5px; background-color:#E2DBF7; ">
+      <label for="filterTier">Tier:</label>
+      <select id="filterTier">
+    <!--     <option value="">All</option> -->
+        <option value="Standard">Standard</option>
+        <option value="Basic">Basic</option>
+        <option value="Lowpriority">Low priority</option>
+      </select>
+
+      <label for="filterSerie">Serie:</label>
+      <select id="filterSerie">
+        <option value="">All</option>
+        <optgroup label="Usefull filters">
+          <option value="_!B_">Non B - Full vCpu reservation</option>
+          <option value="_B_">B - vCpu time sharing</option>
+          <option value="_v2_">v2</option>
+          <option value="_v3_">v3</option>
+          <option value="_v4_">v4</option>
+          <option value="_vx_">Other v's</option>
+          <option value="_s_">s - Premium disks</option>
+          <option value="_!s_">Non s - Premium disks</option>
+          <option value="_a_">a - AMD Cpu</option>
+          <option value="_!a_">Non a - mostly Intel CPU (some AMD)</option>
+        </optgroup>
+        <optgroup label="Series">
+          <option value="A">A - General purpose</option>
+          <!-- <option value="Av2">Av2 - General purpose</option> -->
+          <option value="B">B - vCpu time sharing</option>
+          <option value="D">D - General purpose</option>
+          <!-- <option value="Dsv2">Dsv2 - General purpose</option> -->
+          <!-- <option value="Dsv3">Dsv3 - General purpose</option> -->
+          <!-- <option value="Dv2">Dv2 - General purpose</option> -->
+          <!-- <option value="Dv2Promo">Dv2Promo - General purpose</option> -->
+          <!-- <option value="Dv3">Dv3 - General purpose</option> -->
+          <!-- <option value="Ev3">Ev3 - Memory optimized</option> -->
+          <option value="E">E - Memory optimized</option>
+          <option value="F">F - Compute optimized</option>
+          <!-- <option value="Fv2">Fv2 - Compute optimized</option> -->
+          <option value="G">G - Memory optimized</option>
+          <option value="H">H - High performance compute</option>
+          <option value="L">L - Storage optimized</option>
+          <!-- <option value="Lsv2">Lsv2 - Storage optimized</option> -->
+          <option value="M">M - Memory optimized</option>
+          <!-- <option value="NC">NC - GPU optimized</option> -->
+          <!-- <option value="NCv2">NCv2 - GPU optimized</option> -->
+          <!-- <option value="ND">ND - GPU optimized</option> -->
+          <!-- <option value="NV">NV - GPU optimized</option> -->
+          <option value="N">N - With GPU</option>
+          <option value="P">P - ???</option>
+        </optgroup>
+      </select>
+    </div>
+    <div style="display:Inline-block; padding: 0px 5px; background-color:#DBF7E8; height:35px;">
+      <label for="filterCores">Cores:</label>
+      <input type="text" id="filterCores" readonly style="border:0; color:#E0790A; font-weight:bold; width: 100px;">
+      <div id="filterCoresSlider" style="display:Inline-block; width:200px; margin: 10px 10px;"></div>
+    </div>
+    <div style="display:Inline-block; padding: 0px 5px; background-color:#DBF7E8; height:35px;">
+      <label for="filterRam">RAM (GiBi):</label>
+      <input type="text" id="filterRam" readonly style="border:0; color:#E0790A; font-weight:bold; width: 100px;">
+      <div id="filterRamSlider" style="display:Inline-block; width:200px; margin: 10px 10px;"></div>
+    </div>
+    <input type="button" id="applyFilter" value="Apply Filters" />
+  </div>
+  <div class="filters">
+    <div style="display:Inline-block; padding: 7px 5px; background-color:#F0E4E2; ">
+      <label for="filterCurrency">Currency:</label>
+      <select id="filterCurrency">
+        <option value="eur">EUR</option>
+      </select>
+      <label for="filterHours">Hours:</label>
+      <select id="filterHours">
+        <option value="1">1 hour</option>
+        <option value="730" selected="selected">30 d (730 h)</option>
+        <option value="8760">365 d (8760 h)</option>
+      </select>
+    </div>
+    <div style="display:Inline-block; padding: 7px 5px; " class="P1"> <!-- background-color:#C8EEEE; -->
+      <b>Price 1</b>
+      <label for="filterP1Region">Datacenter:</label>
+      <select id="filterP1Region"></select>
+      <label for="filterP1Offer">Offer:</label>
+      <select id="filterP1Offer"></select>
+    </div>
+    <div style="display:Inline-block; padding: 7px 5px; " class="P2"> <!-- background-color:#F6DCF6;  -->
+      <b>Price 2</b>
+      <label for="filterP2Region">Datacenter:</label>
+      <select id="filterP2Region"></select>
+      <label for="filterP2Offer">Offer:</label>
+      <select id="filterP2Offer"></select>
+    </div>
+  </div>
+  <div class="bigtable">
+    <table id="table_id" class="display">
+      <thead>
+          <tr>
+              <th>VM ID</th>
+              <th>Series</th>
+              <th>Tier</th>
+              <th>VM Size</th>
+              <!-- <th>Cores (hidden)</th> -->
+              <th>Cores</th>
+              <th>Ram (GiBi)</th>
+              <th>Temp <br />Storage <br />(GB)</th>
+              <th>Temp <br />Storage <br />Type</th>
+              <th>Temps <br />Storage <br />Iops</th>
+              <th>Temps <br />Storage <br />MBps *</th>
+              <th>Data Disks</th>
+              <th>Iops</th>
+              <th>MBps</th>
+              <th>Cached <br />Iops</th>
+              <th>Cached <br />MBps</th>
+              <th>IO Cache <br />Size (GiBi)</th>
+              <th>NIC</th>
+              <th>NIC Mbps</th>
+              <th>Price 1</th>
+              <th>Price 2</th>
+              <th>Docs.</th>
+              <!-- <th>Proc.</th> -->
+          </tr>
+      </thead>
+      <tbody>
+      </tbody>
+  </table>
+</div>
+<p>
+*: Temps Storage MBps: displayed as 'total MBps' or 'read MBps / write MBps'
+</p>
+<div class="footnotes">
+  <br />
+  <b>Sources</b><br />
+  <u>Prices:</u><br />
+  <ul>
+    <li><a target="_blank" href="https://azure.microsoft.com/api/v2/pricing/virtual-machines-software/calculator/?culture=en-us&discount=mosp">https://azure.microsoft.com/api/v2/pricing/virtual-machines-software/calculator/?culture=en-us&discount=mosp</a></li>
+    <li><a target="_blank" href="https://azure.microsoft.com/api/v2/pricing/virtual-machines-ahb/calculator/?culture=en-us&discount=mosp">https://azure.microsoft.com/api/v2/pricing/virtual-machines-ahb/calculator/?culture=en-us&discount=mosp</a></li>
+    <li><a target="_blank" href="https://azure.microsoft.com/api/v2/pricing/virtual-machines-base/calculator/?culture=en-us&discount=mosp">https://azure.microsoft.com/api/v2/pricing/virtual-machines-base/calculator/?culture=en-us&discount=mosp</a></li>
+  </ul>
+  <u>Documentation:</u><br />
+  <ul>
+    <li style="list-style: none;">General</li>
+    <ul>
+      <!-- <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general">general https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-general</a></li> -->
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/av2-series"            >general-av2  https://docs.microsoft.com/en-us/azure/virtual-machines/av2-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-b-series-burstable">general-b https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-b-series-burstable</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/dcv2-series"           >general-dcv2 https://docs.microsoft.com/en-us/azure/virtual-machines/dcv2-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series"       >general-dv2  https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/dv3-dsv3-series"       >general-dv3  https://docs.microsoft.com/en-us/azure/virtual-machines/dv3-dsv3-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/dav4-dasv4-series"     >general-dav4 https://docs.microsoft.com/en-us/azure/virtual-machines/dav4-dasv4-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/ddv4-ddsv4-series"     >general-ddv4 https://docs.microsoft.com/en-us/azure/virtual-machines/ddv4-ddsv4-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/dv4-dsv4-series"       >general-dv4  https://docs.microsoft.com/en-us/azure/virtual-machines/dv4-dsv4-series</a></li>
+    </ul>
+    <li style="list-style: none;">Compute</li>
+    <ul>
+      <!-- <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-compute">compute https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-compute</a></li> -->
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/fsv2-series"           >compute-fsv2 https://docs.microsoft.com/en-us/azure/virtual-machines/fsv2-series</a></li>
+    </ul>
+    <li style="list-style: none;">Memory</li>
+    <ul>
+      <!-- <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-memory">memory https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-memory</a></li> -->
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series-memory">memory-dv2   https://docs.microsoft.com/en-us/azure/virtual-machines/dv2-dsv2-series-memory</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/ev3-esv3-series"       >memory-ev3   https://docs.microsoft.com/en-us/azure/virtual-machines/ev3-esv3-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/eav4-easv4-series"     >memory-eav4  https://docs.microsoft.com/en-us/azure/virtual-machines/eav4-easv4-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/edv4-edsv4-series"     >memory-edv4  https://docs.microsoft.com/en-us/azure/virtual-machines/edv4-edsv4-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/ev4-esv4-series"       >memory-ev4   https://docs.microsoft.com/en-us/azure/virtual-machines/ev4-esv4-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/m-series"              >memory-m     https://docs.microsoft.com/en-us/azure/virtual-machines/m-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/mv2-series"            >memory-mv2   https://docs.microsoft.com/en-us/azure/virtual-machines/mv2-series</a></li>
+    </ul>
+    <li style="list-style: none;">Storage</li>
+    <ul>
+      <!-- <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-storage">storage https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-storage</a></li> -->
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/lsv2-series"           >storage-lsv2 https://docs.microsoft.com/en-us/azure/virtual-machines/lsv2-series</a></li>
+    </ul>
+    <li style="list-style: none;">GPU</li>
+    <ul>
+      <!-- <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu">gpu https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu</a></li> -->
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/nc-series"           >gpu-nc         https://docs.microsoft.com/en-us/azure/virtual-machines/nc-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/ncv2-series"         >gpu-ncv2       https://docs.microsoft.com/en-us/azure/virtual-machines/ncv2-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/ncv3-series"         >gpu-ncv3       https://docs.microsoft.com/en-us/azure/virtual-machines/ncv3-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/nd-series"           >gpu-nd         https://docs.microsoft.com/en-us/azure/virtual-machines/nd-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/ndv2-series"         >gpu-ndv2       https://docs.microsoft.com/en-us/azure/virtual-machines/ndv2-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/nv-series"           >gpu-nv         https://docs.microsoft.com/en-us/azure/virtual-machines/nv-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/nvv3-series"         >gpu-nvv3       https://docs.microsoft.com/en-us/azure/virtual-machines/nvv3-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/nvv4-series"         >gpu-nvv4       https://docs.microsoft.com/en-us/azure/virtual-machines/nvv4-series</a></li>
+    </ul>
+    <li style="list-style: none;">High Performance</li>
+    <ul>
+      <!-- <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-hpc">hpc https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-hpc</a></li> -->
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/h-series"            >hpc-h          https://docs.microsoft.com/en-us/azure/virtual-machines/h-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/hb-series"           >hpc-hb         https://docs.microsoft.com/en-us/azure/virtual-machines/hb-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/hbv2-series"         >hpc-hbv2       https://docs.microsoft.com/en-us/azure/virtual-machines/hbv2-series</a></li>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/hc-series"           >hpc-hc         https://docs.microsoft.com/en-us/azure/virtual-machines/hc-series</a></li>
+    </ul>
+    <li style="list-style: none;">Previous generation</li>
+    <ul>
+      <li><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-previous-gen"  >prev-gen       https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-previous-gen</a></li>
+    </ul>
+  </ul>
+</div>
+</body>
+</html>

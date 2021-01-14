@@ -1,0 +1,161 @@
+*
+{
+/*  color:darkred; */
+   vertical-align:middle;
+/*    background-color: #4C565E; */
+/*   color:#B7BFC7; */
+   font-family:Arial, sans serif; 
+}
+
+body 
+{
+  font-size: 0.9em;
+  margin: 0;
+}
+
+table
+{
+  font-size: 0.9em;
+}
+
+table.dataTable thead th, table.dataTable thead td
+{
+  padding: 6px 14px 6px 2px;
+}
+table.dataTable thead th div.DataTables_sort_wrapper span
+{
+  right: -14px /* must be equal to the right padding of table.dataTable thead th, table.dataTable thead td */
+}
+
+table.dataTable tbody td
+{
+  padding: 2px 4px 2px 4px;
+  white-space: nowrap;
+}
+
+table.dataTable tbody td.number
+{
+  text-align: right;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.filters
+{
+  margin: 4px;
+}
+
+.bigtable
+{
+  padding-right:18px;
+}
+
+/* Colors for the prices */
+.P1
+{
+  background-color: #C8EEEE;
+}
+.P2
+{
+  background-color: #F6DCF6;
+}
+.even .P1
+{
+  background-color: #D4F2F2;
+}
+.even .P2
+{
+  background-color: #FAE8FA;
+}
+
+/* Colors for the CPU & RAM sliders handle */
+.ui-slider-horizontal .ui-slider-handle
+{
+  background-color:#BBBBBB;
+  border-color:#9B9B9B;
+}
+.ui-widget-header
+{
+  background-color:#D7D7D7;
+}
+
+/* Tooltip */
+.tooltip 
+{
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px solid blue;
+  width:100%;
+}
+
+.tooltip .tooltiptext 
+{
+  visibility: hidden;
+  width:200px; 
+  background-color: black;
+  color: #fff;
+  text-align: left;
+  /* border-radius: 6px; */
+  padding: 10px 10px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+.tooltip:hover .tooltiptext 
+{
+  visibility: visible;
+}
+
+input , select
+{
+  font-size:inherit;
+}
+#exports
+{
+  display:Inline-block;
+  padding: 0px 10px;
+}
+
+#exports div.dt-buttons::before
+{
+  content: "Export data: ";
+}
+#exports div.dt-buttons
+{
+  display:Inline-block;
+  float:none;
+}
+
+#pagesize /* div.dataTables_length*/
+{
+  display:Inline-block;
+  padding: 4px 10px;
+}
+
+#pager
+{
+  display:Inline-block;
+  padding: 0px 10px;
+}
+
+#info
+{
+  display:Inline-block;
+  padding: 0px 10px;
+}
+
+#info div.dataTables_info
+{
+  padding-top:0px;
+}
+#search
+{
+  display:Inline-block;
+  padding: 0px 10px;
+}
+
+div.footnotes
+{
+  padding: 5px 15px;
+}
