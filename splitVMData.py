@@ -1,12 +1,15 @@
+#!/usr/bin/python3
+
 import requests
 import json
 import datetime
 import re
+import os
 
 print('###############################################################################')
 print('###############################################################################')
 
-outputFolder = 'data\\'
+outputFolder = 'Data' + os.path.sep
 
 
 with open('AzureVMData.js') as vmsDataFile:

@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import requests
 import re
 from pprint import pprint,pformat
