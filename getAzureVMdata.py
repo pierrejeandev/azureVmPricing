@@ -198,14 +198,17 @@ def getVmSpecFromWebPage(url, vmsData, rows, source):
     return rows
 # end def getVmSpecFromWebPage(url, rows):
 
-def parseIops(iops):
+def parseMultiply(iops):
     if iops.find('x') != -1:
         parts = iops.split('x', 1)
+        iops = int(parts[0]) * int(parts[1])
+    elif iops.find('*') != -1:
+        parts = iops.split('*', 1)
         iops = int(parts[0]) * int(parts[1])
     else:
         iops = int(iops)
     return iops
-# end def parseIops(iops)
+# end def parseMultiply(iops)
 
 print('Loading VM specs...')
 rawdata = []
@@ -233,28 +236,34 @@ getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ea
 getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/edv4-edsv4-series',       vmsData, rawdata, 'memory-edv4')
 getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ev4-esv4-series',         vmsData, rawdata, 'memory-ev4')
 getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/m-series',                vmsData, rawdata, 'memory-m')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/msv2-mdsv2-series',       vmsData, rawdata, 'memory-msv2-mdsv2')
 getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/mv2-series',              vmsData, rawdata, 'memory-mv2')
 
 #getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-storage', vmsData, rawdata, 'storage')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/lsv2-series', vmsData, rawdata, 'storage-lsv2')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/lsv2-series',             vmsData, rawdata, 'storage-lsv2')
 
 #getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu', vmsData, rawdata, 'gpu')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nc-series',   vmsData, rawdata, 'gpu-nc')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ncv2-series', vmsData, rawdata, 'gpu-ncv2')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ncv3-series', vmsData, rawdata, 'gpu-ncv3')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nd-series',   vmsData, rawdata, 'gpu-nd')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ndv2-series', vmsData, rawdata, 'gpu-ndv2')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nv-series',   vmsData, rawdata, 'gpu-nv')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nvv3-series', vmsData, rawdata, 'gpu-nvv3')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nvv4-series', vmsData, rawdata, 'gpu-nvv4')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nc-series',               vmsData, rawdata, 'gpu-nc')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ncv2-series',             vmsData, rawdata, 'gpu-ncv2')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ncv3-series',             vmsData, rawdata, 'gpu-ncv3')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nct4-v3-series',          vmsData, rawdata, 'gpu-nct4-v3')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nda100-v4-series',        vmsData, rawdata, 'gpu-nda100-v4')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nd-series',               vmsData, rawdata, 'gpu-nd')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/ndv2-series',             vmsData, rawdata, 'gpu-ndv2')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nv-series',               vmsData, rawdata, 'gpu-nv')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nvv3-series',             vmsData, rawdata, 'gpu-nvv3')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/nvv4-series',             vmsData, rawdata, 'gpu-nvv4')
+
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/np-series',               vmsData, rawdata, 'fpga-np')
 
 #getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-hpc', vmsData, rawdata, 'hpc')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/h-series',    vmsData, rawdata, 'hpc-h')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hb-series',   vmsData, rawdata, 'hpc-hb')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hbv2-series', vmsData, rawdata, 'hpc-hbv2')
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hc-series',   vmsData, rawdata, 'hpc-hc')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/h-series',                vmsData, rawdata, 'hpc-h')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hb-series',               vmsData, rawdata, 'hpc-hb')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hbv2-series',             vmsData, rawdata, 'hpc-hbv2')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hbv3-series',             vmsData, rawdata, 'hpc-hbv3')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/hc-series',               vmsData, rawdata, 'hpc-hc')
 
-getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-previous-gen', vmsData, rawdata, 'prev-gen')
+getVmSpecFromWebPage('https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-previous-gen',      vmsData, rawdata, 'prev-gen')
 
 
 
@@ -277,6 +286,10 @@ for row in rawdata:
         parts = vmid.split('_', 1)
         tier = parts[0].capitalize()
         vmsize = parts[1].replace('_', '').capitalize()
+        if row['source'] == 'hpc-hbv3' :
+            vmsizenew = vmsize.replace('v3', '-v3')
+            print ('hpc-hbv3 - Fix vmsize from ' + vmsize + ' to ' + vmsizenew)
+            vmsize = vmsizenew
         print ('SIZE: ' + row['Size'] +  ' -> ' + vmid + ' |' + tier + ' _ ' + vmsize)
         row.pop('Size', None)
     elif 'Size – Size\\Name' in row:
@@ -359,7 +372,7 @@ for row in rawdata:
         parts = row['Temp storage (GiB)'].replace(" ", "").split("+", 1)
         offers[vmid]['tempsStorage'] = 0
         for v in parts:
-            offers[vmid]['tempsStorage'] += int(v)
+            offers[vmid]['tempsStorage'] += parseMultiply(v)
         # offers[vmid]['tempsStorage'] = int(row['Temp storage (GiB)'])
         row.pop('Temp storage (GiB)', None)
     elif 'Temp storage (GB)' in row: # Standard_HB120rs_v2 = '480 + 960'
@@ -406,13 +419,13 @@ for row in rawdata:
         row.pop('Max. data disks (1023 GB each)', None)
         
     if 'Max data disk throughput: IOPS' in row:
-        offers[vmid]['iops'] = parseIops(row['Max data disk throughput: IOPS'])
+        offers[vmid]['iops'] = parseMultiply(row['Max data disk throughput: IOPS'])
         row.pop('Max data disk throughput: IOPS', None)
     elif 'Max. IOPS (300 per disk)' in row:
-        offers[vmid]['iops'] = parseIops(row['Max. IOPS (300 per disk)'])
+        offers[vmid]['iops'] = parseMultiply(row['Max. IOPS (300 per disk)'])
         row.pop('Max. IOPS (300 per disk)', None)
     elif 'Throughput: IOPS' in row:
-        offers[vmid]['iops'] = parseIops(row['Throughput: IOPS'])
+        offers[vmid]['iops'] = parseMultiply(row['Throughput: IOPS'])
         row.pop('Throughput: IOPS', None)
     elif 'Max uncached disk perf: IOPS / MBps' in row:
         parts = row['Max uncached disk perf: IOPS / MBps'].split(" / ", 1)
@@ -437,12 +450,12 @@ for row in rawdata:
     elif 'Max data disks / throughput: IOPS' in row:
         parts = row['Max data disks / throughput: IOPS'].replace(' ', '').split('/', 1)
         offers[vmid]['dataDisks'] = int(parts[0])
-        offers[vmid]['iops'] = parseIops(parts[1])
+        offers[vmid]['iops'] = parseMultiply(parts[1])
         row.pop('Max data disks / throughput: IOPS', None)
     elif 'Max data disks/throughput: IOPS'  in row:
         parts = row['Max data disks/throughput: IOPS'].split('/', 2)
         offers[vmid]['dataDisks'] = int(parts[0])
-        offers[vmid]['iops'] = parseIops(parts[1])
+        offers[vmid]['iops'] = parseMultiply(parts[1])
         row.pop('Max data disks/throughput: IOPS', None)
     elif 'Max uncached disk throughput: IOPS / MBps' in row:
         parts = row['Max uncached disk throughput: IOPS / MBps'].replace(" ", "").split("/", 1)
@@ -472,7 +485,7 @@ for row in rawdata:
         offers[vmid]['MBps'] = float(parts[1].replace(',', ''))
         row.pop('Max uncached data disk throughput (IOPs/MBps)<sup>4</sup>', None)
     elif 'Max disk throughput: IOPS' in row:
-        offers[vmid]['iops'] = parseIops(row['Max disk throughput: IOPS'])
+        offers[vmid]['iops'] = parseMultiply(row['Max disk throughput: IOPS'])
         row.pop('Max disk throughput: IOPS', None)
 
     if 'Max temp storage throughput: IOPS / Read MBps / Write MBps' in row:
@@ -654,7 +667,7 @@ for row in rawdata:
             offers[vmid]['nic'] = int(row['Max Ethernet vNICs'])
             row.pop('Max Ethernet vNICs', None)
         if 'Max network bandwidth' in row:
-            offers[vmid]['nicMbps'] = int(row['Max network bandwidth'].replace(' Mbps', ''))
+            offers[vmid]['nicMbps'] = int(row['Max network bandwidth'].replace(' Mbps', '').replace(',', ''))
             row.pop('Max network bandwidth', None)
         elif 'Expected network bandwidth (Mbps)' in row:
             if row['Expected network bandwidth (Mbps)'] != '':
