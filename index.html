@@ -264,6 +264,8 @@ $(document).ready( function () {
               selected = selected && vm.series.endsWith('v3');
             else if(serie == "_v4_")
               selected = selected && vm.series.endsWith('v4');
+            else if(serie == "_v5_")
+              selected = selected && vm.series.endsWith('v5');
             else if(serie == "_vx_")
               selected = selected && vm.series.indexOf('v') == -1;
             else if(serie == "_a_")
@@ -443,7 +445,8 @@ Ca marche pas !?§,?§,!
           <option value="_v2_">v2</option>
           <option value="_v3_">v3</option>
           <option value="_v4_">v4</option>
-          <option value="_vx_">Other v's</option>
+          <option value="_v5_">v5</option>
+          <option value="_vx_">Non v's</option>
           <option value="_s_">s - Premium disks</option>
           <option value="_!s_">Non s - Premium disks</option>
           <option value="_a_">a - AMD Cpu</option>
