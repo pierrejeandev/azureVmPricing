@@ -419,6 +419,21 @@ for row in rawdata:
         offers[vmid]['iops'] = int(parts[0])
         offers[vmid]['MBps'] = float(parts[1])
         row.pop('Max uncached disk perf: IOPS / MBps', None)
+    elif 'Max burst uncached disk throughput: IOPS/MBps<sup>1</sup>' in row:
+        parts = row['Max burst uncached disk throughput: IOPS/MBps<sup>1</sup>'].split("/", 1)
+        offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
+        offers[vmid]['MBps'] = float(parts[1].replace(' ', ''))
+        row.pop('Max burst uncached disk throughput: IOPS/MBps<sup>1</sup>', None)
+    elif 'Burst uncached disk throughput: IOPS/MBps<sup>3</sup>' in row:
+        parts = row['Burst uncached disk throughput: IOPS/MBps<sup>3</sup>'].split("/", 1)
+        offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
+        offers[vmid]['MBps'] = float(parts[1].replace(' ', ''))
+        row.pop('Burst uncached disk throughput: IOPS/MBps<sup>3</sup>', None)
+    elif 'Uncached data disk throughput (IOPs/MBps)<sup>4</sup>' in row:
+        parts = row['Uncached data disk throughput (IOPs/MBps)<sup>4</sup>'].split("/", 1)
+        offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
+        offers[vmid]['MBps'] = float(parts[1].replace(' ', ''))
+        row.pop('Uncached data disk throughput (IOPs/MBps)<sup>4</sup>', None)
     elif 'Max data disks / throughput: IOPS' in row:
         parts = row['Max data disks / throughput: IOPS'].replace(' ', '').split('/', 1)
         offers[vmid]['dataDisks'] = int(parts[0])
