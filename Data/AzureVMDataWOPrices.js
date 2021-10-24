@@ -1,5 +1,198 @@
 {
- "currencyData": {},
+  "currencyData": {
+    "ars": {
+     "conversion": 83.53,
+     "glyph": "$",
+     "invertGlyph": false,
+     "locale": "es-ar",
+     "name": "ARS",
+     "onPremConversion": 83.53
+    },
+    "aud": {
+     "conversion": 1.373,
+     "glyph": "$",
+     "invertGlyph": false,
+     "locale": "en-au",
+     "name": "AUD",
+     "onPremConversion": 1.44928
+    },
+    "brl": {
+     "conversion": 4.8989,
+     "glyph": "R$",
+     "invertGlyph": false,
+     "locale": "pt-br",
+     "name": "BRL",
+     "onPremConversion": 5.88305
+    },
+    "cad": {
+     "conversion": 1.28,
+     "glyph": "$",
+     "invertGlyph": false,
+     "locale": "en-ca",
+     "name": "CAD",
+     "onPremConversion": 1.336
+    },
+    "chf": {
+     "conversion": 0.9841,
+     "glyph": "CHF&nbsp;",
+     "invertGlyph": false,
+     "locale": "de-ch",
+     "name": "CHF",
+     "onPremConversion": 1.23257
+    },
+    "dkk": {
+     "conversion": 6.2934,
+     "glyph": "kr",
+     "invertGlyph": false,
+     "locale": "da-dk",
+     "name": "DKK",
+     "onPremConversion": 7.97003
+    },
+    "eur": {
+     "conversion": 0.8433,
+     "glyph": "&euro;",
+     "invertGlyph": false,
+     "locale": "de-de",
+     "name": "EUR",
+     "onPremConversion": 1.07059
+    },
+    "gbp": {
+     "conversion": 0.745309,
+     "glyph": "&pound;",
+     "invertGlyph": false,
+     "locale": "en-gb",
+     "name": "GBP",
+     "onPremConversion": 0.9575
+    },
+    "hkd": {
+     "conversion": 7.76,
+     "glyph": "HK$",
+     "invertGlyph": false,
+     "locale": "zh-hk",
+     "name": "HKD",
+     "onPremConversion": 7.76
+    },
+    "idr": {
+     "conversion": 15640.0,
+     "glyph": "Rp",
+     "invertGlyph": false,
+     "locale": "id-id",
+     "name": "IDR",
+     "onPremConversion": 15640.0
+    },
+    "inr": {
+     "conversion": 72.04526,
+     "glyph": "\u20b9",
+     "invertGlyph": false,
+     "locale": "hi-in",
+     "name": "INR",
+     "onPremConversion": 76.70183
+    },
+    "jpy": {
+     "conversion": 112.0,
+     "glyph": "&yen;",
+     "invertGlyph": false,
+     "locale": "ja-jp",
+     "name": "JPY",
+     "onPremConversion": 119.0
+    },
+    "krw": {
+     "conversion": 1124.65,
+     "glyph": "&#8361;",
+     "invertGlyph": false,
+     "locale": "ko-kr",
+     "name": "KRW",
+     "onPremConversion": 1080.0
+    },
+    "mxn": {
+     "conversion": 19.3,
+     "glyph": "MXN$",
+     "invertGlyph": false,
+     "locale": "es-mx",
+     "name": "MXN",
+     "onPremConversion": 19.3
+    },
+    "myr": {
+     "conversion": 4.2,
+     "glyph": "RM$",
+     "invertGlyph": false,
+     "locale": "ms-my",
+     "name": "MYR",
+     "onPremConversion": 4.2
+    },
+    "nok": {
+     "conversion": 8.81523,
+     "glyph": "kr",
+     "invertGlyph": false,
+     "locale": "nb-no",
+     "name": "NOK",
+     "onPremConversion": 11.0643
+    },
+    "nzd": {
+     "conversion": 1.511944,
+     "glyph": "$",
+     "invertGlyph": false,
+     "locale": "en-nz",
+     "name": "NZD",
+     "onPremConversion": 1.72413
+    },
+    "rub": {
+     "conversion": 62.5,
+     "glyph": "\u0420\u0423\u0411",
+     "invertGlyph": true,
+     "locale": "ru-ru",
+     "name": "RUB",
+     "onPremConversion": 60.23732
+    },
+    "sar": {
+     "conversion": 3.75,
+     "glyph": "SR&nbsp;",
+     "invertGlyph": false,
+     "locale": "ar-sa",
+     "name": "SAR",
+     "onPremConversion": 3.75
+    },
+    "sek": {
+     "conversion": 8.737041,
+     "glyph": "kr",
+     "invertGlyph": true,
+     "locale": "sv-se",
+     "name": "SEK",
+     "onPremConversion": 10.96844
+    },
+    "try": {
+     "conversion": 7.2,
+     "glyph": "\u20ba&nbsp;",
+     "invertGlyph": false,
+     "locale": "tr-tr",
+     "name": "TRY",
+     "onPremConversion": 7.2
+    },
+    "twd": {
+     "conversion": 30.0542,
+     "glyph": "NT$",
+     "invertGlyph": false,
+     "locale": "zh-tw",
+     "name": "TWD",
+     "onPremConversion": 34.4
+    },
+    "usd": {
+     "conversion": 1.0,
+     "glyph": "$",
+     "invertGlyph": false,
+     "locale": "en-us",
+     "name": "USD",
+     "onPremConversion": 1.0
+    },
+    "zar": {
+     "conversion": 18.33,
+     "glyph": "R&nbsp;",
+     "invertGlyph": false,
+     "locale": "en-za",
+     "name": "ZAR",
+     "onPremConversion": 18.33
+    }
+   },
  "offers": {
   "Basic_A0": {
    "baseOfferSlug": "windows-a0-basic",
