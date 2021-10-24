@@ -91,12 +91,14 @@ table.dataTable tbody td.number
 .tooltip .tooltiptext 
 {
   visibility: hidden;
-  width:200px; 
+  width:400px; 
   background-color: black;
   color: #fff;
   text-align: left;
   /* border-radius: 6px; */
   padding: 10px 10px;
+  word-wrap: wrap;
+  /*overflow-wrap: normal;*/
 
   /* Position the tooltip */
   position: absolute;
