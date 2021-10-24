@@ -432,6 +432,11 @@ for row in rawdata:
         offers[vmid]['iops'] = int(parts[0])
         offers[vmid]['MBps'] = float(parts[1])
         row.pop('Max uncached disk perf: IOPS / MBps', None)
+    elif 'Max uncached disk throughput: IOPS / MBps' in row:
+        parts = row['Max uncached disk throughput: IOPS / MBps'].split("/", 1)
+        offers[vmid]['iops'] = int(parts[0].replace(',', '').replace(' ', ''))
+        offers[vmid]['MBps'] = float(parts[1].replace(',', '').replace(' ', ''))
+        row.pop('Max uncached disk throughput: IOPS / MBps', None)
     elif 'Max burst uncached disk throughput: IOPS/MBps<sup>1</sup>' in row:
         parts = row['Max burst uncached disk throughput: IOPS/MBps<sup>1</sup>'].split("/", 1)
         offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
@@ -506,7 +511,22 @@ for row in rawdata:
         # else:
         #     print('DEBUG: ' + vmid + ' - Max temp storage throughput: IOPS / Read MBps / Write MBps - "' + row['Max temp storage throughput: IOPS / Read MBps / Write MBps'] + '"') 
         row.pop('Max temp storage throughput: IOPS/Read MBps/Write MBps', None)
-        
+    elif '<sup>**</sup> Max temp storage throughput: IOPS/MBps' in row:
+        parts = row['<sup>**</sup> Max temp storage throughput: IOPS/MBps'].split('/', 2)
+        if(len(parts) > 1 and parts[0] != ''):
+            offers[vmid]['tempsStorageIops'] = int(parts[0])
+            offers[vmid]['tempsStorageMBpsRead'] = int(parts[1])
+        row.pop('<sup>**</sup> Max temp storage throughput: IOPS/MBps', None)
+        row.pop('Max temp storage throughput: IOPS/Read MBps/Write MBps', None)
+    elif '<sup>**</sup> Max temp storage throughput: IOPS/MBps (cache size in GiB)' in row:
+        parts = row['<sup>**</sup> Max temp storage throughput: IOPS/MBps (cache size in GiB)'].split('/', 2)
+        if(len(parts) > 1 and parts[0] != ''):
+            parts2 = parts[1].split('(', 1)
+            offers[vmid]['tempsStorageIops'] = int(parts[0])
+            offers[vmid]['tempsStorageMBpsRead'] = int(parts2[0])
+            offers[vmid]['tempsStorageMBpsWrite'] = int(parts2[0])
+        row.pop('<sup>**</sup> Max temp storage throughput: IOPS/MBps (cache size in GiB)', None)
+
     if 'Max cached and temp storage throughput: IOPS / MBps' in row:
         parts = row['Max cached and temp storage throughput: IOPS / MBps'].split('/', 1)
         offers[vmid]['tempsStorageIops'] = int(parts[0].replace(',', '').strip())
