@@ -442,6 +442,11 @@ for row in rawdata:
         offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
         offers[vmid]['MBps'] = float(parts[1].replace(' ', ''))
         row.pop('Max burst uncached disk throughput: IOPS/MBps<sup>1</sup>', None)
+    elif 'Max burst cached and temp storage throughput: IOPS/MBps<sup>2</sup>' in row:
+        parts = row['Max burst cached and temp storage throughput: IOPS/MBps<sup>2</sup>'].split("/", 1)
+        offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
+        offers[vmid]['MBps'] = float(parts[1].replace(' ', ''))
+        row.pop('Max burst cached and temp storage throughput: IOPS/MBps<sup>2</sup>', None)
     elif 'Burst uncached disk throughput: IOPS/MBps<sup>3</sup>' in row:
         parts = row['Burst uncached disk throughput: IOPS/MBps<sup>3</sup>'].split("/", 1)
         offers[vmid]['iops'] = int(parts[0].replace(' ', ''))
@@ -484,6 +489,11 @@ for row in rawdata:
         offers[vmid]['iops'] = int(parts[0].replace(',', ''))
         offers[vmid]['MBps'] = float(parts[1].replace(',', ''))
         row.pop('Max uncached disk throughput (IOPS/MBps)', None)
+    elif 'Max uncached disk throughput: IOPS/MBps' in row:
+        parts = row['Max uncached disk throughput: IOPS/MBps'].replace(" ", "").split("/", 1)
+        offers[vmid]['iops'] = int(parts[0].replace(',', ''))
+        offers[vmid]['MBps'] = float(parts[1].replace(',', ''))
+        row.pop('Max uncached disk throughput: IOPS/MBps', None)
     elif 'Max uncached data disk throughput (IOPs/MBps)<sup>4</sup>' in row:
         parts = row['Max uncached data disk throughput (IOPs/MBps)<sup>4</sup>'].replace(" ", "").split("/", 1)
         offers[vmid]['iops'] = int(parts[0].replace(',', ''))
@@ -492,6 +502,7 @@ for row in rawdata:
     elif 'Max disk throughput: IOPS' in row:
         offers[vmid]['iops'] = parseMultiply(row['Max disk throughput: IOPS'])
         row.pop('Max disk throughput: IOPS', None)
+        
 
     if 'Max temp storage throughput: IOPS / Read MBps / Write MBps' in row:
         parts = row['Max temp storage throughput: IOPS / Read MBps / Write MBps'].split('/', 2)
@@ -637,15 +648,15 @@ for row in rawdata:
             else:
                 offers[vmid]['nicMbps'] = int(parts[0].replace(',', '').replace('+', ''))
             row.pop('Max NICs / Expected network bandwidth (Mbps)', None)
-    elif 'Max NICs/Expected network bandwidth (Mbps)' in row:
+    elif 'Max NICs/ Expected network bandwidth (Mbps)' in row:
         # try:
-            parts = row['Max NICs/Expected network bandwidth (Mbps)'].replace(' ', '').split('/', 1)
+            parts = row['Max NICs/ Expected network bandwidth (Mbps)'].replace(' ', '').split('/', 1)
             if(len(parts) == 2):
                 offers[vmid]['nic'] = int(parts[0])
                 offers[vmid]['nicMbps'] = int(parts[1].replace(',', '').replace('+', ''))
             else:
                 offers[vmid]['nicMbps'] = int(parts[0].replace(',', '').replace('+', ''))
-            row.pop('Max NICs/Expected network bandwidth (Mbps)', None)
+            row.pop('Max NICs/ Expected network bandwidth (Mbps)', None)
         # except Exception as ex:
         #     print("Failed to process '" + offers[vmid]['source'] + "'.'" + vmid + "'.'Max NICs / Expected network bandwidth (Mbps)'= '" + row['Max NICs / Expected network bandwidth (Mbps)'] + "'")
         #     print(ex)
